@@ -1,8 +1,11 @@
+from email import message
 from turtle import title
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from .models import Contact
 from django.contrib import messages
 from myblog.models import Post
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 def index(request):
     return render (request, 'home/index.html')
@@ -40,3 +43,53 @@ def search(request):
         messages.warning(request, "No search results found. Please refine your query.")
     params={'allPosts': allPosts, 'query': query}
     return render(request, 'home/search.html', params)
+
+def signUp(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        email = request.POST['email']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+
+        if len(username) > 12:
+            messages.error(request, "Username must be less than 12 characters.")
+            return redirect('index')
+        if not username.isalnum():
+            messages.error(request, "Username must contain letters and numbers")
+            return redirect('index')
+        if pass1 != pass2:
+            messages.error(request, "Passwords didnot match")
+            return redirect('index')
+
+        myuser = User.objects.create_user(username = username, email = email, password = pass1)
+        myuser.first_name = fname
+        myuser.last_name = lname
+        # myuser = form.save(commit=False)
+        myuser.save()
+        messages.success(request, "Your account has been successfully created.")
+        return redirect('index')
+    else:
+        return HttpResponse("404 - NOT FOUND")
+
+
+def handleLogout(request):
+    logout(request)
+    messages.success(request, "Successfully logged out")
+    return redirect('index')
+
+def handleLogin(request):
+    if request.method == "POST":
+        username = request.POST['loginusername']
+        password = request.POST['password']
+        user = authenticate(username = username, password = password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "You have been successfully loged in")
+            return redirect('index')
+        else:
+            messages.error(request, "Invalid Credentials, Please try again")
+            return redirect('index')
+    else:
+        return HttpResponse("404 - Not Found")
