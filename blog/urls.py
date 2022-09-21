@@ -16,6 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+#used to change the admin pannel text
+admin.site.site_header = "myBlogSitePannel"
+admin.site.site_title = "Administrative Pannel"
+admin.site.index_title = "Welcome to myBlog Admin"
+
+
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
