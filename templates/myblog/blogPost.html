@@ -34,7 +34,7 @@
   {% for comment in comments %}
   <div class="row my-3">
     <div class="col-md-1">
-      <img src="/static/img/user.png" alt="" class = "w-100 mt-2" >
+      <img src="/static/img/user.png" alt="" class = "w-100 mt-2 img-fluid" >
     </div>
     <div class="col-md-11"><b>{{comment.user.username}}</b> {{comment.timestamp | naturaltime}} <br>{{comment.comment}}</div>
   </div>
