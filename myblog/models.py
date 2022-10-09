@@ -2,12 +2,14 @@ from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from traitlets import default
 # Create your models here.
 class Post(models.Model):
     sno= models.AutoField(primary_key=True)
     title= models.CharField(max_length=255)
     slug= models.CharField(max_length=150)
     content= models.TextField()
+    views = models.IntegerField(default=0)
     author= models.CharField(max_length=100)
     timeStamp=models.DateTimeField(blank=True)
 
